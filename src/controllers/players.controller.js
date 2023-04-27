@@ -9,3 +9,17 @@ export async function createPlayer(req, res){
         res.status(500).send(error.message);
     }
 }
+
+export async function getPlayers(req, res){
+    const page = res.locals.page;
+    const filter = res.locals.filter;
+    
+    const player_per_page = 20;
+    const numPlayersToShow = player_per_page*page;   
+    try{
+        const players = await db.collection('players').find(filter).toArray();
+        res.send(players.slice(0, numPlayersToShow));
+    } catch (error){
+        res.status(500).send(error.message)
+    }
+}
