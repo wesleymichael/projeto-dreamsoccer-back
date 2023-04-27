@@ -23,3 +23,15 @@ export async function getPlayers(req, res){
         res.status(500).send(error.message)
     }
 }
+
+export async function getPlayersById(req, res){
+    const {id} = req.params;
+    
+    try{
+        const player = await db.collection('players').findOne( {_id: new ObjectId(id)} );
+        if(!player) return res.sendStatus(404);
+        res.send(player)
+    } catch (error){
+        res.status(500).send(error.message);
+    }
+}
