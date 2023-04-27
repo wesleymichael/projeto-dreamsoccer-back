@@ -11,4 +11,5 @@ try {
 } catch (error) {
     console.log(error.message);
 }
-export const db = mongoClient.db("dreamsoccer");
+/* export const db = mongoClient.db("dreamsoccer"); */
+export const db = mongoClient.db();
