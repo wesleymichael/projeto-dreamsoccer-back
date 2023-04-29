@@ -38,7 +38,7 @@ export async function singin(req, res) {
         res.send({ token, userName: usuario.name, userEmail: usuario.email })
 
     } catch (err) {
-        res.send(500).send(err.message)
+        res.status(500).send(err.message)
     }
 
 }
