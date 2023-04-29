@@ -12,5 +12,4 @@ userRouter.get("/login", authValidation ,getUser)
 userRouter.post("/logout", authValidation, logout)
 
 
-
 export default userRouter
