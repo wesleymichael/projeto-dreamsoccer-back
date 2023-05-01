@@ -49,7 +49,18 @@ export async function deleteCartList(req, res) {
     try {
         const result = await db.collection("cart").deleteOne({ idUsuario: acesso.idUsuario, _id: new ObjectId(id) })
         if (result.deletedCount === 0) return res.status(404).send("item não encontrado!")
-        res.status(202).send("Item deletdo")
+        res.status(202).send("Item deletado")
+    } catch (err) {
+        res.status(500).send(err.message)
+    }
+}
+
+export async function deleteCart (req, res){
+    const acesso = res.locals.session
+    try {
+        const result = await db.collection("cart").deleteMany({ idUsuario: acesso.idUsuario })
+        if (result.deletedCount === 0) return res.status(404).send("item não encontrado!")
+        res.status(202).send("Compra finalizada")
     } catch (err) {
         res.status(500).send(err.message)
     }

@@ -4,7 +4,6 @@ export default function filterPlayer(req, res, next) {
     const validPosition = ["ATA", "M", "D", "G"];
     const validCategory = ["M", "F"];
     const validType = ["Legendary", "Silver", "Bronze"];
-    const validNationality = ["BRA", "Internacional"]
     const filter = {};
     const errors = [];
 
@@ -13,17 +12,31 @@ export default function filterPlayer(req, res, next) {
     }
 
     if (category) {
-        if (validCategory.includes(category)) {
-            filter.category = category;
-        } else {
-            errors.push("Variável \"category\" incorreta!");
+        if (typeof category === "string") {
+            if (validCategory.includes(category)) {
+                const array = [category]
+                filter.category = array;
+            } else {
+                errors.push("Variável \"category\" incorreta!");
+            }
+        } else{
+            const array =[]
+            category.forEach((element, i) => {
+                if (validCategory.includes(element)) {
+                    array.push(element);
+                } else {
+                    errors.push("Variável \"category\" incorreta!");
+                }
+            });
+            filter.category = array
         }
     }
 
     if (position) {
         if (typeof position === "string") {
             if (validPosition.includes(position)) {
-                filter.position = position;
+                const array = [position]
+                filter.position = array;
             } else {
                 errors.push("Variável \"position\" incorreta!");
             }
@@ -41,14 +54,27 @@ export default function filterPlayer(req, res, next) {
     }
 
     if (type) {
-        if (validType.includes(type)) {
-            filter.type = type;
-        } else {
-            errors.push("Variável \"type\" incorreta!");
+        if (typeof type === "string") {
+            if (validType.includes(type)) {
+                const array = [type]
+                filter.type = array;
+            } else {
+                errors.push("Variável \"type\" incorreta!");
+            }
+        } else{
+            const array =[]
+            type.forEach((element, i) => {
+                if (validType.includes(element)) {
+                    array.push(element);
+                } else {
+                    errors.push("Variável \"type\" incorreta!");
+                }
+            });
+            filter.type = array
         }
     }
     if (nationality) {
-        if (validNationality.includes(nationality)) {
+        if (typeof nationality ==="string") {
             filter.nationality = nationality;
         } else {
             errors.push("Variável \"nationality\" incorreta!");
