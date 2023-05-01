@@ -31,12 +31,11 @@ export async function getPlayers(req, res) {
         }
     }
 
-    console.log(query)
-    const player_per_page = 20;
-    const numPlayersToShow = player_per_page * page;
+    // const player_per_page = 20;
+    // const numPlayersToShow = player_per_page * page;
     try {
         const players = await db.collection("players").find(query).toArray();
-        res.send(players.slice(0, numPlayersToShow));
+        res.send(players);
     } catch (error) {
         res.status(500).send(error.message)
     }
