@@ -13,45 +13,29 @@ export async function createPlayer(req, res) {
 export async function getPlayers(req, res) {
     const page = res.locals.page;
     const { category, position, type, nationality } = res.locals.filter;
-    const filter = {}
+    const query = {};
     if (position) {
-        if (typeof position === "string") {
-            filter.position = position
-        }else{
-            filter.position.$or = position
-        }
+        query.position = { $in: position };
     }
-
     if (category) {
-        if (typeof category === "string") {
-            filter.category = category
-        }else{
-            filter.category.$or = category
-        }
+        query.category = { $in: category };
     }
-
     if (type) {
-        if (typeof type === "string") {
-            filter.type = type
-        }else{
-            filter.type.$or = type
+        query.type = { $in: type };
+    }
+    if (nationality) {
+        if (nationality === "BRA") {
+            query.nationality = "BRA";
+        } else {
+            query.nationality = { $ne: "BRA" };
         }
     }
 
-    if (nationality) {
-        if (typeof nationality === "string") {
-            filter.nationality = nationality
-        }else{
-            filter.nationality.$or = nationality
-        }
-    }
-    console.log(filter)
-    const player_per_page = 20;
-    const numPlayersToShow = player_per_page * page;
+    // const player_per_page = 20;
+    // const numPlayersToShow = player_per_page * page;
     try {
-        const players = await db.collection('players')
-            .find(filter).toArray();
-        res.send(players.slice(0, numPlayersToShow));
+        const players = await db.collection("players").find(query).toArray();
+        res.send(players);
     } catch (error) {
         res.status(500).send(error.message)
     }

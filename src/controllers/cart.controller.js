@@ -9,7 +9,7 @@ export async function createCartList(req, res) {
     try {
         const player = await db.collection("players").findOne({ _id: new ObjectId(id) })
         if (!player) return res.status(404).send("id não encontrado!")
-        const body = { idUsuario: acesso.idUsuario, amount, color, number, name: player.name, img: player.img, price: player.price }
+        const body = { idUsuario: acesso.idUsuario, amount: Number(amount), color, number, name: player.name, img: player.img, price: player.price }
         await db.collection("cart").insertOne(body)
         res.status(201).send("Item adicionado ao carrinho!")
     } catch (err) {
@@ -27,20 +27,25 @@ export async function getCartList(req, res) {
         res.status(500).send(err.message)
     }
 }
-export async function updateCartList(req, res) {
-    const acesso = res.locals.session
-    const { id, amount } = req.body
-    try {
-        const result = await db.collection("cart")
-            .updateOne({ idUsuario: acesso.idUsuario, _id: new ObjectId(id) }, { $set: { amount } })
-        if (result.matchedCount === 0) return res.status(404).send("Item não encontrado!")
 
-        console.log(result)
-        res.status(202).send("Atualizado")
+export async function updateCartList(req, res) {
+    const { id, amount } = req.body;
+    const { idUsuario } = res.locals.session;
+  
+    try {
+      const result = await db.collection("cart").updateOne(
+        { idUsuario, _id: new ObjectId(id) },
+        { $set: { amount: Number(amount) } }
+      );
+      if (result.matchedCount === 0) {
+        return res.status(404).send("Item não encontrado!");
+      }
+      res.status(202).send("Atualizado");
     } catch (err) {
-        res.status(500).send(err.message)
+      res.status(500).send(err.message);
     }
 }
+
 
 export async function deleteCartList(req, res) {
     const acesso = res.locals.session
@@ -49,7 +54,18 @@ export async function deleteCartList(req, res) {
     try {
         const result = await db.collection("cart").deleteOne({ idUsuario: acesso.idUsuario, _id: new ObjectId(id) })
         if (result.deletedCount === 0) return res.status(404).send("item não encontrado!")
-        res.status(202).send("Item deletdo")
+        res.status(202).send("Item deletado")
+    } catch (err) {
+        res.status(500).send(err.message)
+    }
+}
+
+export async function deleteCart (req, res){
+    const acesso = res.locals.session
+    try {
+        const result = await db.collection("cart").deleteMany({ idUsuario: acesso.idUsuario })
+        if (result.deletedCount === 0) return res.status(404).send("item não encontrado!")
+        res.status(202).send("Compra finalizada")
     } catch (err) {
         res.status(500).send(err.message)
     }
