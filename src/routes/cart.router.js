@@ -11,6 +11,6 @@ cartRouter.post("/cart/:id", validateSchema(cartSchema), createCartList)
 cartRouter.get("/cart", getCartList)
 cartRouter.put("/cart", validateSchema(updateCartSchema), updateCartList)
 cartRouter.delete("/cart", deleteCartList)
-cartRouter.delete("/finalizar", deleteCartList)
+
 
 export default cartRouter;
